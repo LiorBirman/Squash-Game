@@ -1,0 +1,39 @@
+#include "stdafx.h"
+#include "RightWall.h"
+
+RightWall::RightWall(Parameters& params)
+{
+	retnoise = params.getRetnoise(); // Default
+
+	// Position
+	x1 = params.getWidth();
+	y1 = 0;
+	x2 = params.getWidth();
+	y2 = params.getLength();
+
+	collision_type = 1;
+}
+
+// Return True If Ball Hit The Wall
+int RightWall:: Collision(Ball& ball)
+{
+	if ((ball.getX() + BALL_RADIUS) >= x2) // Identify If The Ball Hit The Right Wall
+	{		
+		// Sin & Cos Of The Angle Between "North" (From Racquet To Upper Wall) & Ball Direction
+		double Sin_Direction = sin(ball.getDirection() * Deg2Rad);
+		double Cos_Direction = cos(ball.getDirection() * Deg2Rad);
+
+		// Limit & Set The Ball's Position On The Right Wall
+		double CalcX = x2 - BALL_RADIUS;
+		double Distance = (CalcX - ball.getX()) / Sin_Direction;
+		double CalcY = ball.getY() - Distance * Cos_Direction;
+		ball.setX(CalcX);
+		ball.setY(CalcY);
+
+		return collision_type;
+	}
+	else // No Collision
+	{
+		return 0;
+	}
+}
